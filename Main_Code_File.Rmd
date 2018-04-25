@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+editor_options:
+  chunk_output_type: inline
+header-includes:
+-  \usepackage{enumitem}
+---
+
+#Transition Matrix
+
+The board game Life has 134 spaces culminating in a absorbing state ("retirement"). Some interesting things happen along the board:
+
+\begin{enumerate}
+  \item Players have four opportunities to choose between two path options. Each path has consequences and opportunities related to game play.
+  \begin{enumerate}
+    \item College Path or Career path: College path is longer but comes with higher income opportunities.
+    \item Life Path or Night School Path: Night school path is longer but comes with opportunity to draw new, potentially higher paying career card.
+    \item Family Path or Career Path: Family path is longer but comes with opportunity for kids and a house.
+    \item Safe Path or Risky Path: Paths are equal length. Risky path has alternating spaces for gaining or losing money. Chance for big payoff or big loss. 
+  \end{enumerate}
+  \item Six spaces with that force the player to halt. So, leading up to these spaces, the probability approaches one that the player will land on that space in the next turn as the player approaches the space. 
+\end{enumerate}
+
+```{r}
+board_matrix <- matrix(0, 135, 135)
+
+#filling row 1
+for (i in 1:22) {
+  if (i + 1 != 12 && i + 1 != 13) {
+  board_matrix[1, i + 1] <- 1/20
+  }
+}
+
+#filling rows 2 to 10
+for (i in 2:10) {
+  board_matrix[i,12] <- (i - 1)/10
+  for (j in (i + 1):11) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling row 11
+board_matrix[11,12] <- 1
+
+#filling row 12
+for (i in 13:24) {
+  if (i != 15 && i != 16) {
+    board_matrix[12,i] <- 1/10
+  }
+}
+
+#filling row 13
+for (i in 14:25) {
+  if (i != 15 && i != 16) {
+    board_matrix[13,i] <- 1/10
+  }
+}
+
+#filling rows 14 to 17
+for (i in 14:17) {
+  for (j in (i + 1):(i + 10)) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling rows 18 to 25
+for (i in 18:25) {
+  board_matrix[i,27] <- (i - 16)/10
+  for (j in (i + 1):26) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling row 26
+board_matrix[26,27] <- 1
+
+
+View(board_matrix)
+
+```
+
+
+
+
