@@ -22,7 +22,9 @@ The board game Life has 134 spaces culminating in a absorbing state ("retirement
     \item Safe Path or Risky Path: Paths are equal length. Risky path has alternating spaces for gaining or losing money. Chance for big payoff or big loss. 
   \end{enumerate}
   \item Six spaces with that force the player to halt. So, leading up to these spaces, the probability approaches one that the player will land on that space in the next turn as the player approaches the space. 
-\end{enumerate}
+\end{enumerate}  
+
+###Making Matrix
 
 ```{r}
 board_matrix <- matrix(0, 135, 135)
@@ -77,11 +79,164 @@ for (i in 18:25) {
 #filling row 26
 board_matrix[26,27] <- 1
 
+#row 27, 28, 29
+board_matrix[27, 28:37] <- 1/10
+board_matrix[28, 29:38] <- 1/10
+board_matrix[29, 30:39] <- 1/10
 
-View(board_matrix)
+#filling rows 30 to 37
+for (i in 30:37) {
+  board_matrix[i, 39] <- (i - 28)/10
+  for (j in (i + 1):38) {
+    board_matrix[i,j] <- 1/10
+  }
+}
 
+#filling row 38
+board_matrix[38,39] <- 1
+
+#filling row 39
+board_matrix[39, 40:58] <- 1/20
+board_matrix[39, 55] <- 2/20
+
+#filling rows 40 to 48
+for (i in 40:48) {
+  for (j in (i + 1):48) {
+    board_matrix[i,j] <- 1/10
+  }
+  for (j in 55:(i + 16)) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling rows 49 to 58
+board_matrix[49, 50:59] <- 1/10
+board_matrix[50, 51:60] <- 1/10
+board_matrix[51, 52:61] <- 1/10
+board_matrix[52, 53:62] <- 1/10
+board_matrix[53, 54:63] <- 1/10
+board_matrix[54, 55:64] <- 1/10
+board_matrix[55, 56:65] <- 1/10
+board_matrix[56, 57:66] <- 1/10
+board_matrix[57, 58:67] <- 1/10
+board_matrix[58, 59:68] <- 1/10
+
+#filling rows 59 to 67
+for (i in 59:67) {
+  board_matrix[i, 68] <- (69 - i)/10
+  for (j in (i + 1):67) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling in row 68
+board_matrix[68, 69:78] <- 1/20
+board_matrix[68, 79:88] <- 1/20
+
+#filling in rows 69 to 76
+for (i in 69:76) {
+  board_matrix[i, 78] <- (i - 67)/10
+  for (j in (i + 1):77) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling in row 77
+board_matrix[77, 78] <- 1
+
+#filling in row 78 to 95
+board_matrix[78, 86:95] <- 1/10
+board_matrix[79, 80:89] <- 1/10
+board_matrix[80, 81:90] <- 1/10
+board_matrix[81, 82:91] <- 1/10
+board_matrix[82, 83:92] <- 1/10
+board_matrix[83, 84:93] <- 1/10
+board_matrix[84, 85:94] <- 1/10
+board_matrix[85, 86:95] <- 1/10
+board_matrix[86, 87:96] <- 1/10
+board_matrix[87, 88:97] <- 1/10
+board_matrix[88, 89:98] <- 1/10
+board_matrix[89, 90:99] <- 1/10
+board_matrix[90, 91:100] <- 1/10
+board_matrix[91, 92:101] <- 1/10
+board_matrix[92, 93:102] <- 1/10
+board_matrix[93, 94:103] <- 1/10
+board_matrix[94, 95:104] <- 1/10
+board_matrix[95, 96:105] <- 1/10
+
+#filling in rows 97 to 103
+for (i in 96:103) {
+  board_matrix[i,105] <- (i - 94)/10
+  for (j in (i + 1):104) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling in row 104 
+board_matrix[104, 105] <- 1
+
+#filling in rows 105 to 112
+board_matrix[105, 106:112] <- 1/20
+board_matrix[105, 120:122] <- 2/20
+board_matrix[105, 113:119] <- 1/20
+
+board_matrix[106, 107:112] <- 1/10
+board_matrix[106, 120:123] <- 1/10
+
+board_matrix[107, 108:112] <- 1/10
+board_matrix[107, 120:124] <- 1/10
+
+board_matrix[108, 109:112] <- 1/10
+board_matrix[108, 120:125] <- 1/10
+
+board_matrix[109, 110:112] <- 1/10
+board_matrix[109, 120:126] <- 1/10
+
+board_matrix[110, 111:112] <- 1/10
+board_matrix[110, 120:127] <- 1/10
+
+board_matrix[111, 112] <- 1/10
+board_matrix[111, 120:128] <- 1/10
+
+board_matrix[112, 120:129] <- 1/10
+
+#filling in rows 113 to 125
+for (i in 113:125) {
+  for (j in (i + 1):(i + 10)) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+
+#filling in rows 126 to 134
+for (i in 126:133) {
+  board_matrix[i,135] <- (i - 124)/10
+  for (j in (i + 1):134) {
+    board_matrix[i,j] <- 1/10
+  }
+}
+board_matrix[134,135] <- 1
+#Setting the final recurrent class, row 135
+board_matrix[135,135] <- 1
 ```
 
+###Matrix Eigenvalues
+
+As expected, the long term distribution is absorbing. We expect to find the player at the end of the game.
+```{r}
+r <- eigen(t(board_matrix)) 
+V <- r$vectors
+lambda <- r$values
+lambda
+pibar <- V[,1]/sum(V[,1])
+pibar
+```
+
+#Travel times
+
+How long, in turns, does it take a player on average to get to the end of the board?
+```{r}
+
+```
 
 
 
