@@ -1,16 +1,17 @@
 ---
-title: "R Notebook"
-header-includes: \usepackage{enumitem}
+title: "Main Code File"
+author: "Jenn Halbleib"
+date: "May 6, 2018"
 output:
-  html_document:
-    df_print: paged
-  html_notebook: default
-  pdf_document: default
-editor_options:
-  chunk_output_type: inline
+  pdf_document:
+    toc: true
+bibliography: life.bib
+header-includes:
+- \usepackage{tikz}
+- \usepackage{float}
 ---
 
-```{r, echo = FALSE}
+```{r, message=FALSE}
 library(tidyverse)
 library(MASS)
 ```
@@ -226,17 +227,7 @@ board_matrix[134,135] <- 1
 board_matrix[135,135] <- 1
 ```
 
-###Matrix Eigenvalues
 
-As expected, the long term distribution is absorbing. We expect to find the player at the end of the game as the number of turns heads to infinity.
-```{r}
-r <- eigen(t(board_matrix)) 
-V <- r$vectors
-lambda <- r$values
-lambda
-pibar <- V[,1]/sum(V[,1])
-pibar
-```
 
 #Travel times
 
@@ -1233,15 +1224,15 @@ play_game <- function(college_path, night_school_path, family_path, risky_path) 
 
 
 Simulate the game a bunch of times, commented out because results of simulation are saved 
-```{r}
-#num_sim <- 1000000
-#results <- matrix(0, num_sim, 11)
-#colnames(results) <- c("money", "salary", "spaces_total", "action_card_count", "kid_count",
-#           "house_profit", "number_of_houses", "college_path", "night_school_path", #"family_path", "risky_path")
-#for (i in 1:num_sim) {
-#  path <- paths()
-#  results[i,] <- play_game(path[1], path[2], path[3], path[4])
-#}
+```{r, eval = FALSE}
+num_sim <- 1000000
+results <- matrix(0, num_sim, 11)
+colnames(results) <- c("money", "salary", "spaces_total", "action_card_count", "kid_count",
+           "house_profit", "number_of_houses", "college_path", "night_school_path", "family_path", "risky_path")
+for (i in 1:num_sim) {
+  path <- paths()
+  results[i,] <- play_game(path[1], path[2], path[3], path[4])
+}
 
 #Optional: save simulation results
 #write.csv(results, "results.csv")
@@ -1289,6 +1280,14 @@ mean_houses
 
 houses_plot <- ggplot(results2, aes(number_of_houses)) + geom_bar(color = "skyblue4", fill = "skyblue2") + theme_classic()  + ggtitle("Distribution of Houses Per Game") + xlab("Number of Houses") + ylab("Count Over 1 Million Samples")
 houses_plot
+
+#Average cards drawn
+mean_cards <- summarise(results2, avg = mean(action_card_count))
+mean_cards
+
+
+cards_plot <- ggplot(results2, aes(action_card_count)) + geom_bar(color = "skyblue4", fill = "skyblue2") + theme_classic()  + ggtitle("Distribution of Action Cards Per Game") + xlab("Number of Cards") + ylab("Count Over 1 Million Samples")
+cards_plot
 ```
 
 
@@ -1308,7 +1307,6 @@ mean_life
 mean_night_school <- results2 %>% filter(college_path == 0 & night_school_path == 1) %>% summarise(avg = mean(money))
 mean_night_school
 
-
 #Subsetting data for graph
 exploring_college <- results2 %>% mutate(college_results = ifelse(college_path == 1, 1, ifelse(college_path == 0 & night_school_path == 0, 2, ifelse(college_path == 0 & night_school_path == 1, 3, 0)))) %>% filter(college_results != 0) 
 
@@ -1318,7 +1316,12 @@ college_plot <- ggplot(exploring_college, aes(x = money, fill = as.factor(colleg
 
 college_plot
 
+#Making a table of means and sd
+college_means <- exploring_college %>% select(college_results, money) %>% group_by(college_results)
 
+summarize(college_means,
+           mean_money = mean(money),
+           money_sd = sd(money))
 ```
 
 
