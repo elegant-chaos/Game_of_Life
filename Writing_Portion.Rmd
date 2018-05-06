@@ -1,0 +1,21 @@
+---
+title: "Probabilities in the Game of Life"
+author: "Jenn Halbleib"
+date: "May 6, 2018"
+output: html_document
+---
+
+#Motivation
+
+ADD MONOPOLY PICTURES HERE (STAT COMPS FILES WOULDN'T OPEN FOR SOME REASON)
+
+When students are first presented with Markov Chains, the board game Monopoly is often presented as an example. 
+
+
+
+#The Game of Life: the Board
+
+#First Things First: Probability Matrix and Time to Absorption
+
+#Outcomes from Simulating the Whole Game (with Some Assumptions)
+
