@@ -5,6 +5,8 @@ date: "May 6, 2018"
 output:
   pdf_document:
     toc: true
+    fig_width: 6 
+    fig_height: 4 
 bibliography: life.bib
 header-includes:
 - \usepackage{tikz}
@@ -25,9 +27,9 @@ library(tidyverse)
         \caption{Visualizing Movement in Monopoly (Source: Hayes 2013)}
 \end{figure}
 
-When students are first presented with Markov Chains, the game Monopoly often serves as a motivational example. The Monopoly board (pictured above) is a continuous Markov chain with an interesting property. When a player lands on the "Go to Jail" space, forward movement in the chain is interupted when the player is sent backwards to the "Jail" space. In the long-term probabilities of the board, this means that owning the properties between "Jail" and "Go to Jail" gives the player an advantage in gameplay.   
+When students are first presented with Markov Chains, the game Monopoly often serves as a motivational example. The Monopoly board (pictured above) is a continuous Markov chain with an interesting property. When a player lands on the "Go to Jail" space, forward movement in the chain is interrupted when the player is sent backwards to the "Jail" space. In the long-term probabilities of the board, this means that owning the properties between "Jail" and "Go to Jail" gives the player an advantage in game play.   
 
-This type of analysis struck me as particularly interesting in my early study of probabilty. So, for this project, I decided to analyze a board game with the Monopoly problem in mind. After some Internet searching, I settled on The Game of Life, since I could not find a formal analysis of it. In what follows, I will construct a proability matrix for the board and create a simulation of the game with the goal of highlighting some of the interesting aspects of gameplay. 
+This type of analysis struck me as particularly interesting in my early study of probability. So, for this project, I decided to analyze a board game with the Monopoly problem in mind. After some Internet searching, I settled on The Game of Life, since I could not find a formal analysis of it. In what follows, I will construct a probability matrix for the board and create a simulation of the game with the goal of highlighting some of the interesting aspects of game play. 
 
 #The Game of Life: The Board
 
@@ -37,11 +39,11 @@ This type of analysis struck me as particularly interesting in my early study of
         \caption{The Game of Life: Numbered Board (Source: Hasbro Gaming, Numbers Added)}
 \end{figure}
 
-In The Game of Life, players pass through the stages of life (going to college, getting a job, etc.), earning money along the way until they reach retirement at the end of the board path. Like Monopoly, the Game of Life has several idiosyncratic gameplay features. Movement is determined by a spinner, so each turn a player may move one to ten spaces. The board has six spaces that force the player to stop, voiding any part of the roll that passes the stopping space (see spaces 11, 26, 38, 67, 77, and 104). Additionally, the board path diverges in four places, where the player must choose which path to take (see the start and spaces 38, 67, and 104). It seems reasonable to assume that path choice affects whether a player wins or loses, on average. However, before analyzing questions about optimal game strategy, I will look at a few details using the board's transition matrix.   
+In The Game of Life, players pass through the stages of life (going to college, getting a job, etc.), earning money along the way until they reach retirement at the end of the board path. Like Monopoly, the Game of Life has several idiosyncratic game play features. Movement is determined by a spinner, so each turn a player may move one to ten spaces. The board has six spaces that force the player to stop, voiding any part of the roll that passes the stopping space (see spaces 11, 26, 38, 67, 77, and 104). Additionally, the board path diverges in four places, where the player must choose which path to take (see the start and spaces 38, 67, and 104). It seems reasonable to assume that path choice affects whether a player wins or loses, on average. However, before analyzing questions about optimal game strategy, I will look at a few details using the board's transition matrix.   
 
 #First Things First: Transition Matrix and Time to Absorption  
 
-In contructing a transition matrix, I made two assumptions:
+In constructing a transition matrix, I made two assumptions:
 
 \begin{enumerate}
   \item The game spinner is unbiased, so spins $\in [1,10]$ are equally likely.
@@ -93,13 +95,13 @@ Therefore, we expect the average game to take about 22.2 turns per player.
 The Game of Life has only one goal: retire with more money than the other players. Players earn money in the following ways.
 
 \begin{enumerate}
-  \item The players is assigned a Salary from one of two decks: College or Career. The average salary for the College deck is higher than the average salary for the Career deck. The player has two opportunites to obtain a college career. First, they may choose the College path from the starting position. Second, they may choose to follow the Night School path from space 38. These paths have an opportunity cost, since the paths for college careers are longer. The player recieves their salary each time a "Payday" space is passed or landed on. 
+  \item The players is assigned a Salary from one of two decks: College or Career. The average salary for the College deck is higher than the average salary for the Career deck. The player has two opportunities to obtain a college career. First, they may choose the College path from the starting position. Second, they may choose to follow the Night School path from space 38. These paths have an opportunity cost, since the paths for college careers are longer. The player receives their salary each time a "Payday" space is passed or landed on. 
   \item Players collect children. At the time of retirement, each child is worth 50K.
   \item Players buy houses. At the time of retirement, the house is sold for a price determined by spinning. The sale price may be lower or higher than the purchase price, depending on the spin.
   \item Players draw Action cards. While the cards may pay or require payment from the player, each is worth 100K upon retirement. In almost all cases, the net effect is a gain upon payment in retirement.
   \item Players land on Spin-to-Win spaces. Payment is determined by spinning. 
   \item Players take the Risky path at space 104. On this path, the player may land on spaces that pay or require payment of 100K. 
-  \item Players retire. Each player recieves a bonus upon reaching retirement, with bonuses decreasing by place (i.e. first to finish recieves 400K, next recieves 300K, etc.).
+  \item Players retire. Each player receives a bonus upon reaching retirement, with bonuses decreasing by place (i.e. first to finish receives 400K, next receives 300K, etc.).
 \end{enumerate}
 
 #Outcomes from Simulating the Whole Game (with Some Assumptions)  
@@ -110,7 +112,7 @@ To simplify things, I made the following assumptions.
 
 \begin{enumerate}
   \item The game spinner is unbiased, so spins $\in [1,10]$ are equally likely.
-  \item At each path split, the player chooses their path randomly. The one place this assumption makes things funky is if a player has chosen the College path and then chooses the Night School path. It seems unlikely that someone would choose to pursue a College salary twice in real gameplay.
+  \item At each path split, the player chooses their path randomly. The one place this assumption makes things funky is if a player has chosen the College path and then chooses the Night School path. It seems unlikely that someone would choose to pursue a College salary twice in real game play.
   \item Only one player is on the board at any given time. For this reason, the retirement bonuses are not included in the simulation. 
   \item All cards may be drawn at any point in the game. This means that a player could do something weird like buy the same house twice or draw the same action card again. 
 \end{enumerate}  
@@ -176,7 +178,7 @@ The distribution of action cards drawn per game appears normal with a mean of ap
 
 Excluding the opportunity cost of taking a longer path to retirement (and risking a smaller retirement bonus), does having a higher college salary pay off? 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE}
 #Subsetting data for graph
 exploring_college <- results2 %>% mutate(college_results = ifelse(college_path == 1, 1, ifelse(college_path == 0 & night_school_path == 0, 2, ifelse(college_path == 0 & night_school_path == 1, 3, 0)))) %>% filter(college_results != 0) 
 
@@ -199,7 +201,7 @@ By examination, it appears starting with the College Path or later taking the Ni
 
 #Future work  
 
-The simulation I created works well for visualizing basic aspects of gameplay. In the future, this project could be continued with work to decrease the reliance on assumptions that skew gameplay results. A better function for drawing cards that prevents redrawing of the same card would improve the reliability of simulation results. For this task, C++, Java, or another object oriented language with access to data structures like hash maps or linked lists would work better. Further, a function could be written to use results from this simulation to investigate the effects of retirement bonuses for finishing before others players will improve recommendations for gameplay strategies.   
+The simulation I created works well for visualizing basic aspects of game play. In the future, this project could be continued with work to decrease the reliance on assumptions that skew game play results. A better function for drawing cards that prevents redrawing of the same card would improve the reliability of simulation results. For this task, C++, Java, or another object oriented language with access to data structures like hash maps or linked lists would work better. Further, a function could be written to use results from this simulation to investigate the effects of retirement bonuses on finishing before others players. The results from this function would offer further insight into the payoff for players who choose to take longer paths to get college job salaries. 
 
 #Code Appendix 1: Making the Probability Matrix  
 
@@ -722,8 +724,12 @@ paths <- function() {
 }
 
 #play_game function
-#Iterates the board and returns a final winnings sum, number of spaces landed on total, 
-#and paths taken 
+#Iterates the board and returns total money earned, finishing salary, 
+#number of spaces landed on,
+#number of action cards drawn, number of kids, 
+#profit from houses, number of houses, college_path,
+#night_school_path, family_path, risky_path
+
 play_game <- function(college_path, night_school_path, family_path, risky_path) {
   
   #Tracks current place on board
@@ -1341,10 +1347,12 @@ play_game <- function(college_path, night_school_path, family_path, risky_path) 
   money <- money + 50*kid_count
   
   #Returns: total money earned, finishing salary, number of spaces landed on,
-  #number of action cards drawn, number of kids, profit from houses, number of houses, college_path,
+  #number of action cards drawn, number of kids, profit from houses, 
+  #number of houses, college_path,
   #night_school_path, family_path, risky_path
   return(c(money, salary, spaces_total, action_card_count, kid_count,
-           house_profit, length(house_prices), college_path, night_school_path, family_path, risky_path))
+           house_profit, length(house_prices), college_path, 
+           night_school_path, family_path, risky_path))
   
   }
   
@@ -1372,5 +1380,5 @@ for (i in 1:num_sim) {
 
 ---
 nocite: | 
-  @dobrow_2016, @dobrow_2014, @hayes_2013, @hayes_2017
+  @dobrow_2016, @dobrow_2014, @hayes_2013, @hayes_2017, @life
 ...
